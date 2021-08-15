@@ -1,0 +1,22 @@
+.lists{
+    color:rgb(130, 173, 130)
+}
+
+ol{
+    font-size: 20px;
+    font-family: 'Times New Roman', "arial";
+    font-weight: 30px;
+    color:#257A47;
+    text-align: justify;
+    text-align: center;
+}
+
+p{
+    text-align: center;
+    text-decoration: underline;
+    text-shadow: 2px 1px 1px grey;
+    font-size: 50px;
+    font-family: "arial", 'Times New Roman', Times, serif;
+    font-weight: 75px;
+    color:#1c0546;
+}
