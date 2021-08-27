@@ -24,16 +24,16 @@ def who_wins(nb_joueur):
 
     if computer_move == 'cisors' and user_move == 'paper':
         print(computer_move, 'gangre contre', user_move)
-    if computer_move == 'cisors' and user_move == 'rock':
+    elif computer_move == 'cisors' and user_move == 'rock':
         print(user_move, ' gagne contre', computer_move)
-    if computer_move == 'paper' and user_move == 'rock':
+    elif computer_move == 'paper' and user_move == 'rock':
         print(computer_move, 'gagne contre ', user_move)
-    if computer_move == 'paper' and user_move == 'cisors':
+    elif computer_move == 'paper' and user_move == 'cisors':
         print(user_move, ' gagne contre ', computer_move)
-    if computer_move == 'rock' and user_move == 'cisors':
+    elif computer_move == 'rock' and user_move == 'cisors':
         print(computer_move, 'gagne contre', user_move)
-    if computer_move == 'rock' and user_move == 'paper':
+    elif computer_move == 'rock' and user_move == 'paper':
         print(user_move, ' gagne contre ', computer_move)
 
 
-who_wins(1)
+who_wins(0)
