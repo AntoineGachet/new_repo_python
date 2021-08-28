@@ -1,4 +1,5 @@
 import pygame
+import os
 import random
 
 pygame.init()
@@ -19,44 +20,20 @@ FPS = 60
 y_pos = random.randint(-800, 800)
 x_pos = random.randint(2, 3)
 
-# x_direction = -1  # if x_pos == 2 else 1
-# y_direction = -0.8  # y_pos/1000
+x_direction = 1  # if x_pos == 2 else 1
+y_direction = 0  # y_pos/1000
 
 
-class Ball:
-    def __init__(self):
-        self.y_direction = random.randint(-800, 800) / 100
-        self.x_direction = 1 if random.randint(2, 3) == 2 else 3
-        self.ball_vel = 1
-        self.ball = pygame.Rect(
-            (WIDTH - BALL_WIDTH) / 2,
-            (HEIGHT - BALL_HEIGHT) / 2,
-            BALL_WIDTH,
-            BALL_HEIGHT / 2,
-        )
-
-    def ball_movement(self, left, right, top_boarder, bottom_boarder):
-
-        if self.ball.colliderect(left) or self.ball.colliderect(
-            right
-        ):  # handle bordures collision
-            self.x_direction = -self.x_direction
-        if self.ball.colliderect(top_boarder) or self.ball.colliderect(
-            bottom_boarder
-        ):  # handle paddle collision
-            self.y_direction = -self.y_direction
-
-        self.ball.x += self.x_direction * self.ball_vel
-        self.ball.y += self.y_direction * self.ball_vel
-        self.ball_vel += 0.1
-
-
-def draw_win(left, right):
-
+def draw_win(left, right, ball, top_boarder, down_boarder):
     WIN.fill(BLACK)
     pygame.draw.rect(WIN, WHITE, left)
     pygame.draw.rect(WIN, WHITE, right)
-    pygame.draw.circle(WIN, WHITE, (Ball.ball.x / 2, Ball.ball.y / 2), BALL_WIDTH)
+    pygame.draw.circle(WIN, WHITE, (ball.x / 2, ball.y / 2), BALL_WIDTH)
+    pygame.draw.rect(WIN, WHITE, top_boarder)
+    pygame.draw.rect(WIN, WHITE, down_boarder)
+    # WIN.blit(BALL, (ball.x, ball.y))
+    # WIN.blit(LEFT_RECTANGLE, (left.x, left.y))
+    # WIN.blit(RIGHT_RECTANGLE, (right.x, right.y))
     pygame.display.update()
 
 
@@ -84,19 +61,45 @@ def left_movement(key_pressed, left):
         left.y -= 5
 
 
+def ball_movement(
+    ball, x_directionArg, y_directionArg, left, right, top_boarder, down_boarder
+):
+    global x_direction
+    global y_direction
+
+    ball_velocity = 3
+    if top_boarder.colliderect(ball):  # handle border collisions
+        y_direction = 0
+
+    if down_boarder.colliderect(ball):  # handle border collisions
+        y_direction = 0
+
+    if left.colliderect(ball):  # handle rect collision
+        x_direction = +1
+
+    if right.colliderect(ball):
+        x_direction = -1
+
+    ball.x += x_direction * ball_velocity
+    ball.y += y_direction * ball_velocity
+
+
 def main():
     left = pygame.Rect(50, (HEIGHT - REC_HEIGHT) / 2, REC_WIDTH, REC_HEIGHT)
     right = pygame.Rect(WIDTH - 50, (HEIGHT - REC_HEIGHT) / 2, REC_WIDTH, REC_HEIGHT)
-
+    ball = pygame.Rect(
+        (WIDTH - BALL_WIDTH) / 2, (HEIGHT - BALL_HEIGHT) / 2, BALL_WIDTH, BALL_HEIGHT
+    )
     top_boarder = pygame.Rect(0, 0, WIDTH, 10)
     pygame.draw.rect(WIN, WHITE, (top_boarder))
 
-    bottom_boarder = pygame.Rect(0, HEIGHT, WIDTH, 1)
+    down_boarder = pygame.Rect(0, HEIGHT, WIDTH, 1)
     clock = pygame.time.Clock()
     run = True
 
     while run:
         clock.tick(FPS)
+        print(left)
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -106,9 +109,10 @@ def main():
 
         left_movement(key_pressed, left)
         right_movement(key_pressed, right)
-        ball = Ball()
-        ball.ball_movement(left, right, top_boarder, bottom_boarder)
-        draw_win(left, right)
+        ball_movement(
+            ball, x_direction, y_direction, left, right, top_boarder, down_boarder
+        )
+        draw_win(left, right, ball, top_boarder, down_boarder)
 
 
 if __name__ == "__main__":
