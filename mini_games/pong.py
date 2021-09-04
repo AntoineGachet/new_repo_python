@@ -12,6 +12,9 @@ pygame.display.set_caption("PONG game")
 REC_WIDTH, REC_HEIGHT = 15, 200
 BALL_WIDTH, BALL_HEIGHT = 30, 30
 
+left_score = 0
+right_score = 0
+
 SCORE_FONT = pygame.font.SysFont("Alt retro", 150)
 
 WHITE = (255, 255, 255)
@@ -19,24 +22,43 @@ BLACK = (0, 0, 0)
 GREEN = (0, 255, 0)
 FPS = 60
 
-y_pos = random.randint(-800, 800)
+y_pos = random.randint(-150, 150)
 x_pos = random.randint(2, 3)
 
 x_direction = 1 if x_pos == 2 else -1
-y_direction = y_pos / 1000
-opposite_y = 0 - y_direction
-ball_vel = 2
+y_direction = y_pos / 100
+opposite_y = y_direction
+ball_vel = 3
 
 
-def draw_win(left, right, ball, left_score=0, right_score=0):
+def draw_win(left, right, ball):
+    global left_score
+    global right_score
+    global y_direction
+    global ball_vel
     WIN.fill(BLACK)
     pygame.draw.rect(WIN, WHITE, left)
     pygame.draw.rect(WIN, WHITE, right)
     left_score_text = SCORE_FONT.render(str(left_score), 1, WHITE)
     right_score_text = SCORE_FONT.render(str(right_score), 1, WHITE)
-    WIN.blit(left_score_text, (WIDTH / 2 - 50, 30))
+    WIN.blit(left_score_text, (WIDTH / 2 - 125, 30))
     WIN.blit(right_score_text, (WIDTH / 2 + 50, 30))
-    # pygame.draw.circle(WIN, WHITE, (ball.x / 2, ball.y / 2), BALL_WIDTH)
+    if ball.x >= WIDTH:
+        left_score += 1
+        if left_score == 5:
+            print("Left wins !!!")
+            exit()
+        y_direction = random.randint(-150, 150) / 100
+        ball_vel = 3
+        main()
+    if ball.x <= 0:
+        right_score += 1
+        if right_score == 5:
+            print("Right wins !!!")
+            exit()
+        ball_vel = 3
+        y_direction = random.randint(-150, 150) / 100
+        main()
     pygame.draw.rect(WIN, WHITE, ball)
     pygame.display.update()
 
@@ -71,17 +93,19 @@ def ball_movement(
     right,
     top_boarder,
     down_boarder,
-    ball_vel,
 ):
     global x_direction
     global y_direction
     global opposite_y
+    global ball_vel
 
     if top_boarder.colliderect(ball):  # handle border collisions
-        y_direction = opposite_y
+        y_direction = -1 * y_direction
+        ball_vel += 0.1
 
     if down_boarder.colliderect(ball):  # handle border collisions
-        y_direction = opposite_y
+        y_direction = -1 * y_direction
+        ball_vel += 0.1
 
     if left.colliderect(ball):  # handle rect collision
         x_direction = +1
@@ -123,7 +147,6 @@ def main():
             right,
             top_boarder,
             down_boarder,
-            ball_vel,
         )
         draw_win(left, right, ball)
 
