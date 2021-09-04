@@ -1,8 +1,8 @@
 import pygame
-import os
 import random
 
 pygame.init()
+pygame.font.init()
 
 WIDTH = 1080
 HEIGHT = 720
@@ -12,6 +12,8 @@ pygame.display.set_caption("PONG game")
 REC_WIDTH, REC_HEIGHT = 15, 200
 BALL_WIDTH, BALL_HEIGHT = 30, 30
 
+SCORE_FONT = pygame.font.SysFont("Alt retro", 150)
+
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 GREEN = (0, 255, 0)
@@ -20,20 +22,22 @@ FPS = 60
 y_pos = random.randint(-800, 800)
 x_pos = random.randint(2, 3)
 
-x_direction = 1  # if x_pos == 2 else 1
-y_direction = 0  # y_pos/1000
+x_direction = 1 if x_pos == 2 else -1
+y_direction = y_pos / 1000
+opposite_y = 0 - y_direction
+ball_vel = 2
 
 
-def draw_win(left, right, ball, top_boarder, down_boarder):
+def draw_win(left, right, ball, left_score=0, right_score=0):
     WIN.fill(BLACK)
     pygame.draw.rect(WIN, WHITE, left)
     pygame.draw.rect(WIN, WHITE, right)
-    pygame.draw.circle(WIN, WHITE, (ball.x / 2, ball.y / 2), BALL_WIDTH)
-    pygame.draw.rect(WIN, WHITE, top_boarder)
-    pygame.draw.rect(WIN, WHITE, down_boarder)
-    # WIN.blit(BALL, (ball.x, ball.y))
-    # WIN.blit(LEFT_RECTANGLE, (left.x, left.y))
-    # WIN.blit(RIGHT_RECTANGLE, (right.x, right.y))
+    left_score_text = SCORE_FONT.render(str(left_score), 1, WHITE)
+    right_score_text = SCORE_FONT.render(str(right_score), 1, WHITE)
+    WIN.blit(left_score_text, (WIDTH / 2 - 50, 30))
+    WIN.blit(right_score_text, (WIDTH / 2 + 50, 30))
+    # pygame.draw.circle(WIN, WHITE, (ball.x / 2, ball.y / 2), BALL_WIDTH)
+    pygame.draw.rect(WIN, WHITE, ball)
     pygame.display.update()
 
 
@@ -62,44 +66,48 @@ def left_movement(key_pressed, left):
 
 
 def ball_movement(
-    ball, x_directionArg, y_directionArg, left, right, top_boarder, down_boarder
+    ball,
+    left,
+    right,
+    top_boarder,
+    down_boarder,
+    ball_vel,
 ):
     global x_direction
     global y_direction
+    global opposite_y
 
-    ball_velocity = 3
     if top_boarder.colliderect(ball):  # handle border collisions
-        y_direction = 0
+        y_direction = opposite_y
 
     if down_boarder.colliderect(ball):  # handle border collisions
-        y_direction = 0
+        y_direction = opposite_y
 
     if left.colliderect(ball):  # handle rect collision
         x_direction = +1
+        ball_vel += 0.1
+        print(ball_vel)
 
     if right.colliderect(ball):
         x_direction = -1
+        ball_vel += 0.1
+        print(ball_vel)
 
-    ball.x += x_direction * ball_velocity
-    ball.y += y_direction * ball_velocity
+    ball.x += x_direction * ball_vel
+    ball.y += y_direction * ball_vel
 
 
 def main():
     left = pygame.Rect(50, (HEIGHT - REC_HEIGHT) / 2, REC_WIDTH, REC_HEIGHT)
     right = pygame.Rect(WIDTH - 50, (HEIGHT - REC_HEIGHT) / 2, REC_WIDTH, REC_HEIGHT)
-    ball = pygame.Rect(
-        (WIDTH - BALL_WIDTH) / 2, (HEIGHT - BALL_HEIGHT) / 2, BALL_WIDTH, BALL_HEIGHT
-    )
+    ball = pygame.Rect(WIDTH / 2, HEIGHT / 2, BALL_WIDTH, BALL_HEIGHT)
     top_boarder = pygame.Rect(0, 0, WIDTH, 10)
-    pygame.draw.rect(WIN, WHITE, (top_boarder))
-
     down_boarder = pygame.Rect(0, HEIGHT, WIDTH, 1)
     clock = pygame.time.Clock()
     run = True
 
     while run:
         clock.tick(FPS)
-        print(left)
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -110,9 +118,14 @@ def main():
         left_movement(key_pressed, left)
         right_movement(key_pressed, right)
         ball_movement(
-            ball, x_direction, y_direction, left, right, top_boarder, down_boarder
+            ball,
+            left,
+            right,
+            top_boarder,
+            down_boarder,
+            ball_vel,
         )
-        draw_win(left, right, ball, top_boarder, down_boarder)
+        draw_win(left, right, ball)
 
 
 if __name__ == "__main__":
