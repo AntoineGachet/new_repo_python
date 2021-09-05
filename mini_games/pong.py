@@ -12,9 +12,12 @@ pygame.display.set_caption("PONG game")
 REC_WIDTH, REC_HEIGHT = 15, 200
 BALL_WIDTH, BALL_HEIGHT = 30, 30
 
+<<<<<<< HEAD
 left_score = 0
 right_score = 0
 
+=======
+>>>>>>> 094bf4bbec86c820af75a939ab611718526a11a3
 SCORE_FONT = pygame.font.SysFont("Alt retro", 150)
 
 WHITE = (255, 255, 255)
@@ -26,6 +29,7 @@ y_pos = random.randint(-150, 150)
 x_pos = random.randint(2, 3)
 
 x_direction = 1 if x_pos == 2 else -1
+<<<<<<< HEAD
 y_direction = y_pos / 100
 opposite_y = y_direction
 ball_vel = 3
@@ -36,11 +40,20 @@ def draw_win(left, right, ball):
     global right_score
     global y_direction
     global ball_vel
+=======
+y_direction = y_pos / 1000
+opposite_y = 0 - y_direction
+ball_vel = 2
+
+
+def draw_win(left, right, ball, left_score=0, right_score=0):
+>>>>>>> 094bf4bbec86c820af75a939ab611718526a11a3
     WIN.fill(BLACK)
     pygame.draw.rect(WIN, WHITE, left)
     pygame.draw.rect(WIN, WHITE, right)
     left_score_text = SCORE_FONT.render(str(left_score), 1, WHITE)
     right_score_text = SCORE_FONT.render(str(right_score), 1, WHITE)
+<<<<<<< HEAD
     WIN.blit(left_score_text, (WIDTH / 2 - 125, 30))
     WIN.blit(right_score_text, (WIDTH / 2 + 50, 30))
     if ball.x >= WIDTH:
@@ -59,6 +72,11 @@ def draw_win(left, right, ball):
         ball_vel = 3
         y_direction = random.randint(-150, 150) / 100
         main()
+=======
+    WIN.blit(left_score_text, (WIDTH / 2 - 50, 30))
+    WIN.blit(right_score_text, (WIDTH / 2 + 50, 30))
+    # pygame.draw.circle(WIN, WHITE, (ball.x / 2, ball.y / 2), BALL_WIDTH)
+>>>>>>> 094bf4bbec86c820af75a939ab611718526a11a3
     pygame.draw.rect(WIN, WHITE, ball)
     pygame.display.update()
 
@@ -93,10 +111,15 @@ def ball_movement(
     right,
     top_boarder,
     down_boarder,
+<<<<<<< HEAD
+=======
+    ball_vel,
+>>>>>>> 094bf4bbec86c820af75a939ab611718526a11a3
 ):
     global x_direction
     global y_direction
     global opposite_y
+<<<<<<< HEAD
     global ball_vel
 
     if top_boarder.colliderect(ball):  # handle border collisions
@@ -106,6 +129,14 @@ def ball_movement(
     if down_boarder.colliderect(ball):  # handle border collisions
         y_direction = -1 * y_direction
         ball_vel += 0.1
+=======
+
+    if top_boarder.colliderect(ball):  # handle border collisions
+        y_direction = opposite_y
+
+    if down_boarder.colliderect(ball):  # handle border collisions
+        y_direction = opposite_y
+>>>>>>> 094bf4bbec86c820af75a939ab611718526a11a3
 
     if left.colliderect(ball):  # handle rect collision
         x_direction = +1
@@ -147,6 +178,10 @@ def main():
             right,
             top_boarder,
             down_boarder,
+<<<<<<< HEAD
+=======
+            ball_vel,
+>>>>>>> 094bf4bbec86c820af75a939ab611718526a11a3
         )
         draw_win(left, right, ball)
 
