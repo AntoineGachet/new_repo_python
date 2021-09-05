@@ -16,8 +16,6 @@ BALL_WIDTH, BALL_HEIGHT = 30, 30
 left_score = 0
 right_score = 0
 
-=======
->>>>>>> 094bf4bbec86c820af75a939ab611718526a11a3
 SCORE_FONT = pygame.font.SysFont("Alt retro", 150)
 
 WHITE = (255, 255, 255)
