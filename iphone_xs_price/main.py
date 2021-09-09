@@ -3,40 +3,31 @@ import requests
 import pywhatkit
 import time
 from datetime import datetime
-import os
-from twilio.rest import Client
-
-
-# Find your Account SID and Auth Token at twilio.com/console
-# and set the environment variables. See http://twil.io/secure
+import keyboard as k
 
 
 def send_message(price, link):
     check__if_already_sent = []
     checked = price in check__if_already_sent
     if not checked:
-        account_sid = os.environ["AC85e4f450863b460591651b1dc56c7129"]
-        auth_token = os.environ["366308a2515a5b9aaecfc411f5165dda"]
-        client = Client(account_sid, auth_token)
-
         check__if_already_sent.append(price)
-        message_body = (
+        message = (
             "UN IPHONE XS A SEULEMENT "
             + str(price)
             + "€ EST EN VENTE SUR BLACKMARKET. CLIQUEZ SUR CE LIEN: "
             + str(link)
         )
-        message = client.messages.create(
-            body=message_body,
-            messaging_service_sid="MGed87f09517167ce400e09e7b4ca0c377",
-            to="+33769531684",
-        )
-        print(message.sid)
+        now = datetime.now()
+        hour = now.hour
+        minute = now.minute
+
+        pywhatkit.sendwhatmsg("+33769531684", message, hour, minute + 1)
+        k.press_and_release("enter")
 
 
 def check_price(prices_only, link):
     for i in range(len(prices_only)):
-        if int(prices_only[i]) <= 550:
+        if int(prices_only[i]) <= 350:
             send_message(prices_only[i], link)
 
 
@@ -56,7 +47,7 @@ def main():
             prices_only.append(price)
 
         check_price(prices_only, url)
-        # time.sleep(600)
+        time.sleep(600)
 
 
 if __name__ == "__main__":
