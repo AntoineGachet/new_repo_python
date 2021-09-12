@@ -22,6 +22,7 @@ def send_message(price, link):
         minute = now.minute
 
         pywhatkit.sendwhatmsg("+33769531684", message, hour, minute + 1)
+        time.sleep(60)
         k.press_and_release("enter")
 
 
